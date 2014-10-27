@@ -72,8 +72,9 @@ function validateForm (form) {
 
     var occSelect = document.getElementById('occupation');
     var selOther = form.elements['occupationOther'];
+    var occValue = selOther.value;
     if (occSelect.value == 'other') {
-        validateReqField (selOther.value);
+        validateReqField (occValue);
     }
 
     testZip();
@@ -125,7 +126,7 @@ function testZip () {
     var zipRegExp = new RegExp('^\\d{5}$');
     var zipDigits = document.getElementById('zip');
 
-    if (!zipRegExp.test(zipDigits)) {
+    if (!zipRegExp.test(zipDigits.value)) {
         var zipMsg = ('Zip code incorrect, please enter only 5 digits.');
         displayError (zipMsg);
     }
