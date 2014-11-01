@@ -45,13 +45,12 @@ function onReady () {
 document.addEventListener('DOMContentLoaded', onReady);
 
 function onSubmit (evt) {
-    var valid = validateForm(this);
+   try {
 
-    if (!valid) {
-        var errMsg = document.getElementById('error-message');
-        errMsg.innerHTML = 'Please provide values for all required fields.';
-        errMsg.style.display = 'block';
-    }
+       var valid = validateForm(this);
+   } catch (exception) {
+
+   }
 
     if (!valid && evt.preventDefault) {
         evt.preventDefault();
@@ -72,17 +71,23 @@ function validateForm (form) {
 
     var occSelect = document.getElementById('occupation');
     var selOther = form.elements['occupationOther'];
-    var occValue = selOther.value;
     if (occSelect.value == 'other') {
-        validateReqField (occValue);
+       valid &= validateReqField (selOther);
     }
+    console.log(form.elements['zip']);
+    valid &= testZip(form.elements['zip']);
 
-    testZip();
-
-    var dob = form.elements['birthdate'].value;
-    var age = calculateAge(dob);
+    var dob = form.elements['birthdate'];
+    var age = calculateAge(dob.value);
+    console.log(age);
     if (age < 13) {
-        displayAge();
+        valid &= false;
+        dob.className = 'form-control invalid-field';
+        displayAgeError(false);
+    }
+    else {
+        console.log('hi');
+        displayAgeError(true);
     }
 
     return valid;
@@ -122,29 +127,30 @@ function calculateAge (dob) {
     return yearsDiff;
 }
 
-function testZip () {
+function testZip (zip) {
     var zipRegExp = new RegExp('^\\d{5}$');
-    var zipDigits = document.getElementById('zip');
+    var valid = zipRegExp.test(zip.value);
 
-    if (!zipRegExp.test(zipDigits.value)) {
-        var zipMsg = ('Zip code incorrect, please enter only 5 digits.');
-        displayError (zipMsg);
+    if (valid) {
+        zip.className = 'form-control';
     }
+    else {
+        zip.className = 'form-control invalid-field';
+    }
+    return valid;
 }
 
-function displayAge () {
+function displayAgeError (valid) {
     var ageMsg = 'You must be 13 or older to sign up.';
-    displayError(ageMsg);
-}
-
-function displayError (error) {
-    displayMessage (error, true);
-}
-
-function displayMessage (message, isError) {
     var msg = document.getElementById('birthdateMessage');
-    msg.innerHTML = message;
-    msg.className = isError ? 'alert alert-danger' : 'alert alert-success';
-    msg.style.display = 'block';
+    msg.innerHTML = ageMsg;
+    console.log(valid);
+    if (!valid) {
+        msg.style.display = 'block';
+    }
+    else {
+        msg.style.display = 'none';
+    }
+    console.log(msg.style.display);
 }
 
