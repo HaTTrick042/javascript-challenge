@@ -45,12 +45,8 @@ function onReady () {
 document.addEventListener('DOMContentLoaded', onReady);
 
 function onSubmit (evt) {
-   try {
 
-       var valid = validateForm(this);
-   } catch (exception) {
-
-   }
+    var valid = validateForm(this);
 
     if (!valid && evt.preventDefault) {
         evt.preventDefault();
@@ -74,12 +70,10 @@ function validateForm (form) {
     if (occSelect.value == 'other') {
        valid &= validateReqField (selOther);
     }
-    console.log(form.elements['zip']);
     valid &= testZip(form.elements['zip']);
 
     var dob = form.elements['birthdate'];
     var age = calculateAge(dob.value);
-    console.log(age);
     if (age < 13) {
         valid &= false;
         dob.className = 'form-control invalid-field';
