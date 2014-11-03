@@ -45,8 +45,9 @@ function onReady () {
 document.addEventListener('DOMContentLoaded', onReady);
 
 function onSubmit (evt) {
-
-    var valid = validateForm(this);
+try {
+    var valid = validateForm(this);}
+    catch(exception){}
 
     if (!valid && evt.preventDefault) {
         evt.preventDefault();
